@@ -29,3 +29,53 @@ def salvar_dados():
         for livro in biblioteca:
             linha = f"{livro['titulo']};{livro['autor']};{livro['emprestado']};{livro['quem']}\n"
             f.write(linha)
+            # --- PARTE DO THIAGO ---
+# Funções principais de manipulação dos livros
+
+def cadastrar_livro():
+    titulo = input("Título do livro: ")
+    autor = input("Autor: ")
+    biblioteca.append({
+        "titulo": titulo,
+        "autor": autor,
+        "emprestado": False,
+        "quem": None
+    })
+    salvar_dados()
+    print(f"Livro '{titulo}' cadastrado!\n")
+
+
+def emprestar_livro():
+    titulo = input("Título do livro a emprestar: ")
+    for livro in biblioteca:
+        if livro["titulo"].lower() == titulo.lower() and not livro["emprestado"]:
+            nome = input("Nome de quem pega: ")
+            livro["emprestado"] = True
+            livro["quem"] = nome
+            salvar_dados()
+            print(f"Livro '{titulo}' emprestado para {nome}.\n")
+            return
+    print("Livro não encontrado ou já emprestado.\n")
+
+
+def devolver_livro():
+    titulo = input("Livro a devolver: ")
+    for livro in biblioteca:
+        if livro["titulo"].lower() == titulo.lower() and livro["emprestado"]:
+            livro["emprestado"] = False
+            livro["quem"] = None
+            salvar_dados()
+            print(f"Livro '{titulo}' devolvido!\n")
+            return
+    print("Livro não encontrado.\n")
+
+
+def listar_livros():
+    if not biblioteca:
+        print("Nenhum livro cadastrado.\n")
+        return
+    print("Lista de livros:")
+    for livro in biblioteca:
+        status = f"Emprestado para {livro['quem']}" if livro["emprestado"] else "Disponível"
+        print(f" - {livro['titulo']} ({livro['autor']}) → {status}")
+    print()
